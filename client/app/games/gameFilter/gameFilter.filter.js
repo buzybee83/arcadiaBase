@@ -1,23 +1,31 @@
-'use strict';
+(function() {
+  'use strict';
 
-angular.module('arcadiaBaseApp')
-.filter('gameFilter', function () {
-  function isMatch(str, pattern) {
-    return str.toLowerCase().indexOf(pattern.toLowerCase()) !== -1;
-  }
+  angular.module('arcadiaBaseApp')
+  .filter('gameFilter', function () {
 
-  return function(inventory, searchText) {
-    var games = {
-        searchText: searchText,
-        out: []
-    };
-    angular.forEach(inventory, function (game) {
-      if (isMatch(game.category   , this.searchText) ||
-          isMatch(game.name       , this.searchText) ||
-          isMatch(game.description, this.searchText) ) {
-        this.out.push(game);
+    function isMatch(str, pattern) {
+      if (pattern) {
+        return str.toLowerCase().indexOf(pattern.toLowerCase()) !== -1;
       }
-    }, games);
-    return games.out;
-  };
-});
+      else {
+        return true;
+      }
+    }
+
+    return function(inventory, searchText) {
+      var games = {
+          searchText: searchText,
+          out: []
+      };
+      angular.forEach(inventory, function (game) {
+        if (isMatch(game.category   , this.searchText) ||
+            isMatch(game.name       , this.searchText) ||
+            isMatch(game.description, this.searchText) ) {
+          this.out.push(game);
+        }
+      }, games);
+      return games.out;
+    };
+  });
+})();

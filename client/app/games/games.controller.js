@@ -1,6 +1,23 @@
 'use strict';
 
 angular.module('arcadiaBaseApp')
-  .controller('GamesCtrl', function ($scope) {
-    $scope.message = 'Hello';
+  .controller('GamesCtrl', function ($state, gameService) {
+
+    var that = this;
+
+    that.searchText = '';
+
+    that.getInventory = function() {
+      gameService.getGames().then(function(json) {
+        that.inventory = json.data;
+      });
+    };
+
+    that.getInventory();
+
+    this.goGame = function (game) {
+      console.log('goGame: ' + game._id);
+      // $state.go( 'gameDetail', { gameName : game. } );
+      $state.go('game' + game.name);
+    };
   });

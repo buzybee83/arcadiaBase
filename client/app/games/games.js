@@ -6,6 +6,6 @@ angular.module('arcadiaBaseApp')
       .state('games', {
         url: '/games',
         templateUrl: 'app/games/games.html',
-        controller: 'GamesCtrl'
+        controller: 'GamesCtrl as games'
       });
   });
