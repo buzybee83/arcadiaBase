@@ -5,6 +5,10 @@ angular.module('arcadiaBaseApp')
     $scope.menu = [{
       'title': 'Home',
       'link': '/'
+    },
+    {
+      'title': 'Games',
+      'link': '/games'
     }];
 
     $scope.isCollapsed = true;
