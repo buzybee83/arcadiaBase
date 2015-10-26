@@ -7,6 +7,7 @@
 
 var Thing = require('../api/thing/thing.model');
 var User = require('../api/user/user.model');
+var Game = require('../api/game/game.model');
 
 Thing.find({}).remove(function() {
   Thing.create({
@@ -44,6 +45,31 @@ User.find({}).remove(function() {
     password: 'admin'
   }, function() {
       console.log('finished populating users');
+    }
+  );
+});
+
+Game.find().remove(function() {
+  Game.create(
+    {
+      category: 'Puzzle',
+      name: 'Tetris',
+      description: 'Strategically rotate, move, and drop a procession of Tetriminos that fall into the rectangular Matrix. Clear as many lines as possible by completing horizontal rows of blocks without empty space, but if the Tetriminos surpass the Skyline the game is over!',
+      players: '1 - 2 players'
+    },
+    {
+      category: 'Strategy',
+      name: 'Connect 4',
+      description: 'Connect Four is a grid of seven columns and six rows. While the game is simple to follow and play, it can be rather challenging to win.',
+      players: '2 players'
+    },
+    function() {
+      Game.find(function (err, games) {
+        if (err) { console.log(err); }
+        else {
+          console.log('Finished populating ' + games.length + ' games.');
+        }
+      });
     }
   );
 });
