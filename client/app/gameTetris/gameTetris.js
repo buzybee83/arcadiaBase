@@ -6,6 +6,6 @@ angular.module('arcadiaBaseApp')
       .state('gameTetris', {
         url: '/Tetris',
         templateUrl: 'app/gameTetris/gameTetris.html',
-        controller: 'GameTetrisCtrl'
+        controller: 'GameTetrisCtrl as tetrisCtrl'
       });
   });

@@ -16,7 +16,6 @@ angular.module('arcadiaBaseApp')
     that.getInventory();
 
     this.goGame = function (game) {
-      console.log('goGame: ' + game._id);
       // $state.go( 'gameDetail', { gameName : game. } );
       $state.go('game' + game.name);
     };
