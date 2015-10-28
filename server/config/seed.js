@@ -59,7 +59,7 @@ Game.find().remove(function() {
     },
     {
       category: 'Strategy',
-      name: 'Connect 4',
+      name: 'Connect4',
       description: 'Connect Four is a grid of seven columns and six rows. While the game is simple to follow and play, it can be rather challenging to win.',
       players: '2 players'
     },
