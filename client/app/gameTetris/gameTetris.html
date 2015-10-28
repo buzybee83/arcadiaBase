@@ -2,34 +2,24 @@
 <div class="container" ng-model="gameTetris">
   <div id="gameCanvas">
     <div id="gameInProgress">Game is in progress. You will automatically join if either player leaves.</div>
-    <canvas id="canvas0" width="350" height="560"></canvas>
+    <canvas id="canvas0" width="350" height="560" focus></canvas>
     <canvas id="canvas1" width="350" height="560"></canvas>
   </div>
-  <input type="button" onClick="startConnection()" id="startButton" value="Start Game" class="btn btn-info btn-lg" />
-  <input type="button" onClick="restartGame()" id="restartButton" value="Restart Game" class="btn btn-danger btn-md" />
-  <br><br>
-  <div class="back pull-right">
-        <button type="button"
-                class="btn btn-primary"
-                onclick="window.history.back()">Back</button>
-  </div>
+  <input type="button" id="startButton" value="Start Game" class="btn btn-info btn-lg" />
+  <input type="button" onclick="this.blur();" id="restartButton" value="Restart Game" class="btn btn-danger btn-md" />
 </div>
 
-<script src="https://cdn.firebase.com/js/client/2.2.1/firebase.js"></script>
-<script type="text/javascript">
-  var gameInProgress = document.getElementById('gameInProgress');
-  var gameCanvas = document.getElementById('gameCanvas');
-  var restartButton = document.getElementById('restartButton');
-  var startButton = document.getElementById('startButton');
-
-  startButton.style.display = "block";
+<script>
   var canvas = document.getElementById('canvas0');
+
   if (!canvas || !canvas.getContext || !canvas.getContext('2d'))
     alert("You must use a browser that supports HTML5 Canvas to run this game.");
+
 
   function start() {
     var tetrisRef = new Firebase('https://arcadiabase.firebaseio.com/');
     var tetrisController = new Tetris.Controller(tetrisRef);
+    // return tetrisController;
   }
 
   var Tetris = { };
@@ -410,6 +400,7 @@
       if (committed) { // We got in!
         self.playingState = Tetris.PlayingState.Playing;
         self.startPlaying(playerNum);
+
       } else {
         self.playingState = Tetris.PlayingState.Watching;
       }
@@ -420,8 +411,13 @@
    * Once we've joined, enable controlling our player.
    */
   Tetris.Controller.prototype.startPlaying = function (playerNum) {
+    console.log('this1:', this);
     this.myPlayerRef = this.tetrisRef.child('player' + playerNum);
+    console.log('this.myPlayerRef:', this.myPlayerRef);
+
     this.opponentPlayerRef = this.tetrisRef.child('player' + (1 - playerNum));
+    console.log('this.opponentPlayerRef:', this.opponentPlayerRef);
+
     this.myBoard = this.boards[playerNum];
     this.myBoard.isMyBoard = true;
     this.myBoard.draw();
@@ -436,15 +432,18 @@
     this.watchForRestart();
 
     var self = this;
-    document.getElementById('restartButton').style.display = "block";
-    document.getElementById('restartButton').click(function () {
-      Tetris.Controller.prototype.restartGame();
+    var restartButton = document.getElementById('restartButton');
+    restartButton.style.display = "block";
+    $(restartButton).click(function () {
+      self.restartGame();
     });
+
     document.getElementById('startButton').style.display = "none";
 
     this.initializePiece();
     this.enableKeyboard();
     this.resetGravity();
+    self.restartGame();
   };
 
   Tetris.Controller.prototype.initializePiece = function() {
@@ -599,9 +598,10 @@
   };
 
   Tetris.Controller.prototype.restartGame = function () {
+    console.log('this2:', this);
+    console.log('opponent:', this.opponentPlayerRef);
     this.opponentPlayerRef.child('restarts').set(1);
     this.resetMyBoardAndPiece();
-    console.log(opponentPlayerRef);
   };
 
   Tetris.Controller.prototype.resetMyBoardAndPiece = function () {
@@ -610,19 +610,23 @@
     newPiece.writeToFirebase(this.myPlayerRef.child('piece'));
   };
 
+
+  // custom code
+
+  var gameInProgress = document.getElementById('gameInProgress');
+  var gameCanvas = document.getElementById('gameCanvas');
+  var restartButton = document.getElementById('restartButton');
+  var startButton = document.getElementById('startButton');
+
+  startButton.style.display = "block";
   gameInProgress.style.display = "none";
   gameCanvas.style.display = "none";
   restartButton.style.display = "none";
 
-
-  function startConnection() {
+  $('#startButton').click(function () {
     gameCanvas.style.display = "block";
     startButton.style.display = "none";
     restartButton.style.display = "block";
-    start();
-  }
-  function restartGame() {
-    Tetris.Controller.prototype.restartGame();
-  }
-
+    setTimeout(start(), 1000);
+  });
 </script>
