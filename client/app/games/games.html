@@ -1,37 +1,102 @@
-<section class="container search">
-  <form class="navbar-form navbar-right" role="search">
-    <div class="form-group">
-      <input type="text" class="form-control" name="search" ng-model="games.searchText" placeholder="Search">
-    </div>
-    <button type="clear" class="btn btn-warning"
-            ng-click="games.searchText = ''">Reset</button>
-  </form>
-</section>
-
-<section class="container items">
-  <div class="list-group">
-    <div class="row">
-      <div class="col-lg-6 col-md-4 col-sm-6 col-xs-12 animate-inventory"
-           ng-repeat="game in filteredGames = ( games.inventory | gameFilter : games.searchText | orderBy: ['category', 'players'] )">
-        <a ng-click="games.goGame(game)" class="list-group-game">
-          <h3>{{ game.name }}</h3>
-          <article class="row">
-            <!-- <div class="col-xs-5">
-              <img class="middle" width=96px ng-src="/assets/images/{{item.imageFile}}"/>
-            </div> -->
-            <div class="col-xs-7">
-              <dl class="dl-horizontal">
-                <td>{{ game.category }} |</td>
-                <td> {{ game.players }}</td>
-              </dl>
+<div id="banner" class="hero-unit">
+  <section class="container search">
+    <form class="navbar-form navbar-right" role="search">
+      <div class="form-group">
+        <input type="text" class="form-control" name="search" ng-model="games.searchText" placeholder="Search">
+      </div>
+      <button type="clear" class="btn btn-warning" ng-click="games.searchText = ''">Reset</button>
+    </form>
+  </section>
+  <section class="row">
+    <div class="container">
+      <!-- GAMES -->
+      <div class="list-group col-md-5">
+        <div class="row">
+          <div class="col-lg-6 col-md-4 col-sm-6 col-xs-12 text-center">
+            <h3>Play Time!</h3>
+            <div class="animate-inventory" ng-repeat="game in filteredGames = ( games.inventory | gameFilter : games.searchText | orderBy: ['category', 'players'] )">
+              <a ng-click="games.goGame(game)" class="list-group-game">
+                <h3>{{ game.name }}</h3>
+                <article class="row">
+                    <dl class="dl-horizontal">
+                      <td>{{ game.category }} |</td>
+                      <td> {{ game.players }}</td>
+                    </dl>
+                </article>
+              </a>
             </div>
-          </article>
-        </a>
+            <div class="animate-inventory text-center" ng-hide="filteredGames.length">
+              <h3>No items match your search.</h3>
+            </div>
+          </div>
+        </div>
       </div>
-      <div class="animate-inventory text-center" ng-hide="filteredGames.length">
-        <h3>No items match your search.</h3>
+      <!-- CHAT -->
+      <div class="chat col-md-7">
+        <h3>Chatty Games</h3>
+        <ul id='messages' class="chat-messages"></ul>
+        <div class='chat-toolbar'>
+          <label for="nameInput" class="form-inline">
+            <input type='text' id='nameInput' class="form-control" placeholder='enter a username...'>
+            <input type='text' id='messageInput' class="form-control" placeholder='Type a message...'>
+          </label>
+        </div>
       </div>
     </div>
-  </div>
-</section>
+  </section>
+  <footer class="navbar-bottom footer container">
+    <p><span class="glyphicon glyphicon-heart"> Games</span></p>
+  </footer>
+</div>
 
+<!-- CHAT JAVACRIPT -->
+<script>
+// CREATE A REFERENCE TO FIREBASE
+var messagesRef = new Firebase('https://arcadiabase.firebaseio.com/');
+
+// REGISTER DOM ELEMENTS
+var messageField = $('#messageInput');
+var nameField = $('#nameInput');
+var messageList = $('#messages');
+
+// LISTEN FOR KEYPRESS EVENT
+messageField.keypress(function(e) {
+  if (e.keyCode == 13) {
+    //FIELD VALUES
+    var username = nameField.val();
+    var message = messageField.val();
+
+    //SAVE DATA TO FIREBASE AND EMPTY FIELD
+    messagesRef.push({
+      name: username,
+      text: message
+    });
+    messageField.val('');
+  }
+});
+
+// Add a callback that is triggered for each chat message.
+messagesRef.limitToLast(15).on('child_added', function(snapshot) {
+  //GET DATA
+  var data = snapshot.val();
+  var username = data.name || Annonimous;
+  var message = data.text;
+
+  //CREATE ELEMENTS MESSAGE & SANITIZE TEXT
+  var messageElement = $("<li class='message'>");
+  var nameElement = $("<strong class='chat-username'></strong>")
+  nameElement.text(username + ': ');
+  messageElement.text(message).prepend(nameElement);
+
+  //ADD MESSAGE
+  messageList.append(messageElement)
+  changeMssgBgColor(messageElement);
+  //SCROLL TO BOTTOM OF MESSAGE LIST
+  messageList[0].scrollTop = messageList[0].scrollHeight;
+});
+
+function changeMssgBgColor(messageElement) {
+  var randomColor = Math.floor(Math.random()*16777215).toString(16);
+  $('.message').css('color', '#' + randomColor);
+}
+</script>

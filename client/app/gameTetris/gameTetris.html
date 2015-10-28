@@ -7,6 +7,9 @@
   </div>
   <input type="button" id="startButton" value="Start Game" class="btn btn-info btn-lg" />
   <input type="button" onclick="this.blur();" id="restartButton" value="Restart Game" class="btn btn-danger btn-md" />
+  <footer class="navbar-fixed-bottom footer">
+    <p><span class="glyphicon glyphicon-heart"> Games</span></p>
+  </footer>
 </div>
 
 <script>
@@ -598,8 +601,6 @@
   };
 
   Tetris.Controller.prototype.restartGame = function () {
-    console.log('this2:', this);
-    console.log('opponent:', this.opponentPlayerRef);
     this.opponentPlayerRef.child('restarts').set(1);
     this.resetMyBoardAndPiece();
   };
@@ -611,7 +612,7 @@
   };
 
 
-  // custom code
+  // Custom code
 
   var gameInProgress = document.getElementById('gameInProgress');
   var gameCanvas = document.getElementById('gameCanvas');
@@ -628,5 +629,6 @@
     startButton.style.display = "none";
     restartButton.style.display = "block";
     setTimeout(start(), 1000);
+    Firebase.goOnline();
   });
 </script>

@@ -1,3 +1,376 @@
-<div class="col-md-12">
-This is the gameConnect4 view.
+<div class="container">
+  <p class="lead" id="gameTop">Select players to start game!</p>
+  <br><br>
+  <div class="winner"></div>
+  <div id="game">
+    <div id="gameFrame">
+      <div id="rowStart">
+        <table id="top" class="Yellow">
+          <tr class="topRow">
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+          </tr>
+        </table>
+      </div>
+      <table class="gameboard">
+        <tr class="row0">
+          <td id="0-0"></td>
+          <td id="0-1"></td>
+          <td id="0-2"></td>
+          <td id="0-3"></td>
+          <td id="0-4"></td>
+          <td id="0-5"></td>
+          <td id="0-6"></td>
+        </tr>
+        <tr class="row1">
+          <td id="1-0"></td>
+          <td id="1-1"></td>
+          <td id="1-2"></td>
+          <td id="1-3"></td>
+          <td id="1-4"></td>
+          <td id="1-5"></td>
+          <td id="1-6"></td>
+        </tr>
+        <tr rlass="row2">
+          <td id="2-0"></td>
+          <td id="2-1"></td>
+          <td id="2-2"></td>
+          <td id="2-3"></td>
+          <td id="2-4"></td>
+          <td id="2-5"></td>
+          <td id="2-6"></td>
+        </tr>
+        <tr rlass="row3">
+          <td id="3-0"></td>
+          <td id="3-1"></td>
+          <td id="3-2"></td>
+          <td id="3-3"></td>
+          <td id="3-4"></td>
+          <td id="3-5"></td>
+          <td id="3-6"></td>
+        </tr>
+        <tr rlass="row4">
+          <td id="4-0"></td>
+          <td id="4-1"></td>
+          <td id="4-2"></td>
+          <td id="4-3"></td>
+          <td id="4-4"></td>
+          <td id="4-5"></td>
+          <td id="4-6"></td>
+        </tr>
+        <tr rlass="row5">
+          <td id="5-0"></td>
+          <td id="5-1"></td>
+          <td id="5-2"></td>
+          <td id="5-3"></td>
+          <td id="5-4"></td>
+          <td id="5-5"></td>
+          <td id="5-6"></td>
+        </tr>
+      </table>
+    </div>
+    <div id="winner"></div>
+  </div>
+  <div class="playerBtn">
+    <p><a id="2player" class="btn btn-lg btn-primary">Player Vs Player</a></p>
+    <!-- <p><a id='player' class="btn btn-lg btn-primary">Player Vs Computer</a></p> -->
+  </div>
+  <footer class="navbar-fixed-bottom footer">
+    <p><span class="glyphicon glyphicon-heart"> Games</span></p>
+  </footer>
 </div>
+<script>
+  'use strict';
+  function start() {
+    Firebase.goOnline();
+    var connect4Ref = new Firebase('https://blinding-torch-9684.firebaseio.com/');
+    assignPlayerAndPlayGame(connect4Ref);
+    console.log('Firebase connection started ' + connect4Ref);
+  }
+
+  var game = $('#game');
+  var message = $('.lead');
+  var winner;
+  var NUM_ROWS = 6;
+  var NUM_COLS = 7;
+  var EMPTY_CELL = '';
+  var board = new Array(NUM_ROWS);
+  var activePlayer = 'Yellow';
+
+  function togglePlayer() {
+    activePlayer = activePlayer === 'Yellow' ? 'Red' : 'Yellow';
+    $('#top').toggleClass('Red', 'Yellow');
+    message.html('Current Player is: ' + activePlayer);
+  }
+
+  // Initializing board with empty cells
+  function initBoard() {
+    for (var i = 0; i < NUM_ROWS; i++) {
+      board[i] = new Array(NUM_COLS);
+      for (var j = 0; j < NUM_COLS; j++) {
+        board[i][j] = EMPTY_CELL;
+      }
+    }
+  }
+
+  function render() {
+    console.log('rendering board: ' + JSON.stringify(board));
+    for (var i = 0; i < NUM_ROWS; i++) {
+      for (var j = 0; j < NUM_COLS; j++) {
+        var cell = board[i][j];
+        if (cell !== EMPTY_CELL) {
+          var id = i + '-' + j;
+          // console.log('setting cell class' + i + ',' + j + ' = ' + cell);
+          $('#' + id).addClass(cell);
+        }
+      }
+    }
+  }
+
+  function checkForWinner() {
+    // Check horizontal win
+    for (var i = 0; i < NUM_ROWS; i++) {
+      for (var j = 0; j < NUM_COLS / 2; j++) {
+        var cell0 = board[i][j + 0];
+        var cell1 = board[i][j + 1];
+        var cell2 = board[i][j + 2];
+        var cell3 = board[i][j + 3];
+        if (cell0 !== EMPTY_CELL &&
+          cell0 === cell1 &&
+          cell0 === cell2 &&
+          cell0 === cell3) {
+          return cell0;
+        }
+      }
+    }
+
+    // Check vertical win
+    for (i = 0; i < NUM_ROWS / 2; i++) {
+      for (j = 0; j < NUM_COLS; j++) {
+        cell0 = board[i][j];
+        cell1 = board[i + 1][j];
+        cell2 = board[i + 2][j];
+        cell3 = board[i + 3][j];
+        console.log(cell0 + cell1 + cell2 + cell3);
+        if (cell0 !== EMPTY_CELL &&
+          cell0 === cell1 &&
+          cell0 === cell2 &&
+          cell0 === cell3) {
+          $(this).css(
+            'border-color', 'Red'
+          );
+          return cell0;
+        }
+      }
+    }
+
+    // Diagonal win bottom left - top right
+    for (i = 0; i < NUM_ROWS / 2; i++) {
+      for (j = 0; j < NUM_COLS; j++) {
+        cell0 = board[i][j + 3];
+        cell1 = board[i + 1][j + 2];
+        cell2 = board[i + 2][j + 1];
+        cell3 = board[i + 3][j + 0];
+        console.log(cell0 + cell1 + cell2 + cell3);
+        if (cell0 !== EMPTY_CELL &&
+          cell0 === cell1 &&
+          cell0 === cell2 &&
+          cell0 === cell3) {
+          return cell0;
+        }
+      }
+    }
+
+    // Diagonal win bottom right - top left
+    for (i = 0; i < NUM_ROWS / 2; i++) {
+      for (j = 0; j < NUM_COLS; j++) {
+        cell0 = board[i][j + 0];
+        cell1 = board[i + 1][j + 1];
+        cell2 = board[i + 2][j + 2];
+        cell3 = board[i + 3][j + 3];
+        console.log(cell0 + cell1 + cell2 + cell3);
+        if (cell0 !== EMPTY_CELL &&
+          cell0 === cell1 &&
+          cell0 === cell2 &&
+          cell0 === cell3) {
+          return cell0;
+        }
+      }
+    }
+    return EMPTY_CELL;
+  }
+
+  // End player turn after a win
+  function endGame() {
+    $('.topRow').click(function() {
+      $('.topRow td').unbind();
+    });
+    $('#winner').toggleClass(winner);
+    message.html('We have a WINNER!');
+    //$('.gameboard').css('margin-top', '-215px');
+  }
+
+  // Hide gameboard
+  function hideGame() {
+    game.hide();
+    message.html('');
+  }
+
+  // Winner message and hide board
+  function displayWinner() {
+    message.html(winner + ' Player' + '<br />' + 'WINS!!!').css({
+      'font-size': '3.8em',
+      'margin-top': '50px',
+      'font-weight': 700,
+      'color': '#FF1919'
+    });
+  }
+
+
+  //Hide Board on start.
+  function initialSetUp() {
+    initBoard();
+    render();
+    game.hide();
+    // $('#reset').hide();
+    $('#player').hide();
+    message.show().html('Two player game, hit start when ready!');
+    $('#2player').html('Start Game');
+  }
+
+  // Board focus
+  function scrollPage() {
+    $('html, body').animate({
+      scrollTop: $('#gameTop').offset().top
+    }, 300);
+  }
+
+  function gameStart() {
+    game.show();
+    $('.playerBtn').hide();
+    scrollPage();
+    $('#reset').show();
+    $('#top').addClass(activePlayer);
+  }
+
+  initialSetUp();
+
+  // Player chip & winner logic
+  $('.topRow td').click(function() {
+    var col = $(this).parent().children().index($(this));
+    // var activePlayer = $(this).closest('table').data('activeplayer');
+
+    // find first empty cell for given col from bottom up
+    for (var row = NUM_ROWS - 1; row >= 0; row--) {
+      if (board[row][col] === EMPTY_CELL) {
+        console.log('Found empty cell at ' + row + ',' + col + ' - filling with ' + activePlayer);
+        board[row][col] = activePlayer;
+        togglePlayer();
+        winner = checkForWinner();
+        console.log('winner: ' + winner);
+        if (winner === 'Yellow' || winner === 'Red') {
+          endGame();
+          setTimeout(hideGame, 1600);
+          setTimeout(displayWinner, 1900);
+        }
+        break;
+      }
+
+    }
+    render();
+
+  });
+
+  var NUM_PLAYERS = 2;
+
+  // A location under GAME_LOCATION that will store the list of
+  // players who have joined the game (up to MAX_PLAYERS).
+  var PLAYERS_LOCATION = 'player_list';
+
+  // A location under GAME_LOCATION that you will use to store data
+  // for each player (their game state, etc.)
+  var PLAYER_DATA_LOCATION = 'player_data';
+
+  // Called after player assignment completes.
+  function playGame(myPlayerNumber, userId, justJoinedGame, gameRef) {
+    var playerDataRef = gameRef.child(PLAYER_DATA_LOCATION).child(myPlayerNumber);
+    alert('You are player number ' + myPlayerNumber +
+        '.  Your data will be located at ' + playerDataRef.toString());
+
+    if (justJoinedGame) {
+      alert('Doing first-time initialization of data.');
+      playerDataRef.set({state: 'game state'});
+    }
+  }
+
+  // Use transaction() to assign a player number, then call playGame().
+  function assignPlayerAndPlayGame(gameRef) {
+    var playerListRef = gameRef.child(PLAYERS_LOCATION);
+    var myPlayerNumber, alreadyInGame = false;
+
+    playerListRef.transaction(function(playerList) {
+      // Attempt to (re)join the given game. Notes:
+      //
+      // 1. Upon very first call, playerList will likely appear null (even if the
+      // list isn't empty), since Firebase runs the update function optimistically
+      // before it receives any data.
+      // 2. The list is assumed not to have any gaps (once a player joins, they
+      // don't leave).
+      // 3. Our update function sets some external variables but doesn't act on
+      // them until the completion callback, since the update function may be
+      // called multiple times with different data.
+      if (playerList === null) {
+        playerList = [];
+      }
+
+      for (var i = 0; i < playerList.length; i++) {
+        if (playerList[i] === userId) {
+          // Already seated so abort transaction to not unnecessarily update playerList.
+          alreadyInGame = true;
+          myPlayerNumber = i; // Tell completion callback which seat we have.
+          return;
+        }
+      }
+
+      if (i < NUM_PLAYERS) {
+        // Empty seat is available so grab it and attempt to commit modified playerList.
+        playerList[i] = userId;  // Reserve our seat.
+        myPlayerNumber = i; // Tell completion callback which seat we reserved.
+        return playerList;
+      }
+
+      // Abort transaction and tell completion callback we failed to join.
+      myPlayerNumber = null;
+    }, function (error, committed) {
+      // Transaction has completed.  Check if it succeeded or we were already in
+      // the game and so it was aborted.
+      if (committed || alreadyInGame) {
+        playGame(myPlayerNumber, userId, !alreadyInGame, gameRef);
+      } else {
+        alert('Game is full.  Can\'t join. :-(');
+      }
+    });
+  }
+
+  function clear() {
+    var col = $(this).parent().children().index($(this));
+    for (var row = 0; row < NUM_ROWS; row++) {
+      if (board[row][col] !== EMPTY_CELL) {
+        board[row][col] = EMPTY_CELL;
+      }
+    }
+  }
+
+  // Game start
+  $("#2player").click(function() {
+    gameStart();
+    message.html('Current Player is: Yellow');
+    Firebase.goOffline();
+    setTimeout(start(), 1500);
+  });
+</script>
