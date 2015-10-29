@@ -1,16 +1,16 @@
 
-<div class="container" ng-model="gameTetris">
+<div class="container game" ng-model="gameTetris">
   <div id="gameCanvas">
     <div id="gameInProgress">Game is in progress. You will automatically join if either player leaves.</div>
     <canvas id="canvas0" width="350" height="560" focus></canvas>
     <canvas id="canvas1" width="350" height="560"></canvas>
   </div>
-  <input type="button" id="startButton" value="Start Game" class="btn btn-info btn-lg" />
-  <input type="button" onclick="this.blur();" id="restartButton" value="Restart Game" class="btn btn-danger btn-md" />
-  <footer class="navbar-fixed-bottom footer">
-    <p><span class="glyphicon glyphicon-heart"> Games</span></p>
-  </footer>
+  <input type="button" id="startButton" value="Start Game" class="btn btn-info btn-lg start-btn" />
+  <input type="button" onclick="this.blur();" id="restartButton" value="Restart Game" class="btn btn-warning btn-md" />
 </div>
+<footer class="footer">
+  <p><span class="glyphicon glyphicon-heart"> Games</span></p>
+</footer>
 
 <script>
   var canvas = document.getElementById('canvas0');
@@ -495,9 +495,11 @@
         case key.space:
           // Drop as far as we can.
           var droppedPiece = self.fallingPiece;
+          var sound = '../../sounds/PieceLockdown.ogg';
           do {
             newPiece = droppedPiece;
             droppedPiece = droppedPiece.drop();
+            sound.play();
           } while (!self.myBoard.checkForPieceCollision(droppedPiece));
           break;
       }

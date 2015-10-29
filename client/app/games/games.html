@@ -1,4 +1,4 @@
-<div id="banner" class="hero-unit">
+<div id="banner" class="gamesMain hero-unit">
   <section class="container search">
     <form class="navbar-form navbar-right" role="search">
       <div class="form-group">
@@ -12,7 +12,7 @@
       <!-- GAMES -->
       <div class="list-group col-md-5">
         <div class="row">
-          <div class="col-lg-6 col-md-4 col-sm-6 col-xs-12 text-center">
+          <div class="col-lg-12 col-md-4 col-sm-6 col-xs-12 text-center">
             <h3>Play Time!</h3>
             <div class="animate-inventory" ng-repeat="game in filteredGames = ( games.inventory | gameFilter : games.searchText | orderBy: ['category', 'players'] )">
               <a ng-click="games.goGame(game)" class="list-group-game">
@@ -20,7 +20,11 @@
                 <article class="row">
                     <dl class="dl-horizontal">
                       <td>{{ game.category }} |</td>
-                      <td> {{ game.players }}</td>
+                      <td> {{ game.players }}</td><br>
+                      <strong>About </strong><br>
+                      <p class="left">
+                      <tr>{{ game.description }}</tr>
+                      </p>
                     </dl>
                 </article>
               </a>
@@ -79,23 +83,32 @@ messageField.keypress(function(e) {
 messagesRef.limitToLast(15).on('child_added', function(snapshot) {
   //GET DATA
   var data = snapshot.val();
-  var username = data.name || Annonimous;
+  var username = data.name || Welcome;
   var message = data.text;
 
   //CREATE ELEMENTS MESSAGE & SANITIZE TEXT
   var messageElement = $("<li class='message'>");
   var nameElement = $("<strong class='chat-username'></strong>")
   nameElement.text(username + ': ');
-  messageElement.text(message).prepend(nameElement);
+  var mssg = messageElement.text(message).prepend(nameElement);
 
   //ADD MESSAGE
-  messageList.append(messageElement)
-  changeMssgBgColor(messageElement);
+  messageList.append(mssg)
+  changeMssgBgColor(mssg);
   //SCROLL TO BOTTOM OF MESSAGE LIST
   messageList[0].scrollTop = messageList[0].scrollHeight;
+
+  function deleteMssg(mssg) {
+    var deleteRef = new Firebase("https://arcadiabase.firebaseio.com/"+mssg.id);
+    console.log('Firebase ref: ' + deleteRef);
+    //this command removes the item from the firebase, and then deletes it from our local viewmodel to keep the views in sync
+    deleteRef.remove(function(){  viewmodel.messages.remove(mssg); });
+  }
 });
 
-function changeMssgBgColor(messageElement) {
+
+
+function changeMssgBgColor(el) {
   var randomColor = Math.floor(Math.random()*16777215).toString(16);
   $('.message').css('color', '#' + randomColor);
 }

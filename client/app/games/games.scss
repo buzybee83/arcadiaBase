@@ -1,3 +1,4 @@
+
 #messages {
   width: 500px;
   height: 400px;
@@ -6,19 +7,17 @@
   color: #454545;
   text-align: left;
   border-radius: 5px;
-  padding: 20px;
+  padding: 10px;
+  overflow: scroll;
+  scroll: true;
 }
 
 #messages li {
   list-style-type: none;
-  padding: 3px;
+  padding: 3px 6px;
 }
-.footer {
-  margin-top: 20px;
-}
-
-.container {
-  color: white;
+.left {
+  text-align: left;
 }
 a {
   color: white;
@@ -26,6 +25,7 @@ a {
 .animate-inventory a:hover {
   color: black;
   cursor: crosshair;
+  text-decoration: none;
 }
 #messageInput {
   width: 300px;
@@ -35,6 +35,29 @@ a {
 }
 .message {
   border-radius: 5px;
-  margin-top: 1px;
   color: black;
 }
+#messages > li {
+  border: 1px solid #cccccc;
+  margin-top: 1px;
+  margin-bottom: 0.8px;
+}
+// ANIMATIONS
+$animation-duration: 1s;
+.animate-inventory {
+  &.ng-enter {
+    animation: zoomInUp 0.8s;
+  }
+  &.ng-leave {
+    animation: zoomOutDown 0.8s;
+  }
+}
+.message > li {
+  &.ng-enter {
+    animation: zoomInUp;
+  }
+  &.ng-leave {
+    animation: zoomOutDown 0.8s;
+  }
+}
+
