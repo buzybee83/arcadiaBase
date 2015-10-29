@@ -556,10 +556,10 @@
 
       // Check for completed lines and if appropriate, push extra rows to our opponent.
       var completedRows = this.myBoard.removeCompletedRows();
-      var rowsToPush = (completedRows === 4) ? 4 : completedRows - 1;
+      var rowsToPush = (completedRows === 3) ? 3 : completedRows - 1;
+
       if (rowsToPush > 0)
         this.opponentPlayerRef.child('extrarows').push(rowsToPush);
-
       // Create new piece (it'll be initialized to a random piece at the top of the screen).
       newPiece = new Tetris.Piece();
 
@@ -574,6 +574,7 @@
 
   // Detect when our opponent pushes extra rows to us.
   Tetris.Controller.prototype.watchForExtraRows = function () {
+    var pushedToOponentSnd = new Audio('../assets/sounds/VO_BRILLIANT.ogg');
     var self = this;
     var extraRowsRef = this.myPlayerRef.child('extrarows');
     extraRowsRef.on('child_added', function(snapshot) {
@@ -588,6 +589,7 @@
       if (self.fallingPiece) {
         self.fallingPiece.y -= rows;
         self.fallingPiece.writeToFirebase(self.myPlayerRef.child('piece'));
+        pushedToOponentSnd.play();
       }
     });
   };
