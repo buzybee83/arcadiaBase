@@ -8,10 +8,8 @@
   <input type="button" id="startButton" value="Start Game" class="btn btn-info btn-lg start-btn" />
   <input type="button" onclick="this.blur();" id="restartButton" value="Restart Game" class="btn btn-warning btn-md" />
 </div>
-<footer class="footer">
-  <p><span class="glyphicon glyphicon-heart"> Games</span></p>
-</footer>
 
+<!-- TETRIS LOGIC -->
 <script>
   var canvas = document.getElementById('canvas0');
 
@@ -22,7 +20,7 @@
   function start() {
     var tetrisRef = new Firebase('https://arcadiabase.firebaseio.com/');
     var tetrisController = new Tetris.Controller(tetrisRef);
-    // return tetrisController;
+    return tetrisController;
   }
 
   var Tetris = { };
@@ -204,6 +202,9 @@
     var copyFrom = Tetris.BOARD_HEIGHT - 1;
     var copyTo = copyFrom;
 
+    // Sound Effects for row piece touch down and rows completed
+    var blowRow = new Audio('../assets/sounds/SFX_crashGlass.mp3');
+
     var completedRows = 0;
     while (copyFrom >= 0) {
       var fromContents = this.getRow(copyFrom);
@@ -212,6 +213,7 @@
       if (fromContents.match(Tetris.COMPLETE_LINE_PATTERN)) {
         copyFrom--;
         completedRows++;
+        blowRow.play();
       } else {
         // Copy the row down (to fill the gap from any removed rows) and continue on.
         this.setRow(copyTo, fromContents);
@@ -219,7 +221,6 @@
         copyTo--;
       }
     }
-
     return completedRows;
   };
 
@@ -475,31 +476,38 @@
       if (self.fallingPiece === null)
         return; // piece isn't initialized yet.
 
+      // Sound Effects for moves
+      var rotate =new Audio("../assets/sounds/SFX_PieceRotateLR.ogg");
+      var leftRight = new Audio("../assets/sounds/SFX_PieceFall.ogg");
+      var spaceSound = new Audio("../assets/sounds/SFX_PieceHardDrop.ogg");
+
       var keyCode = evt.which;
       var key = { space:32, left:37, up:38, right:39, down:40 };
-
       var newPiece = null;
       switch (keyCode) {
         case key.left:
+          leftRight.play();
           newPiece = self.fallingPiece.moveLeft();
           break;
         case key.up:
+          rotate.play();
           newPiece = self.fallingPiece.rotate();
           break;
         case key.right:
+          leftRight.play();
           newPiece = self.fallingPiece.moveRight();
           break;
         case key.down:
+          leftRight.play();
           newPiece = self.fallingPiece.drop();
           break;
         case key.space:
           // Drop as far as we can.
+          spaceSound.play();
           var droppedPiece = self.fallingPiece;
-          var sound = '../../sounds/PieceLockdown.ogg';
           do {
             newPiece = droppedPiece;
             droppedPiece = droppedPiece.drop();
-            sound.play();
           } while (!self.myBoard.checkForPieceCollision(droppedPiece));
           break;
       }
