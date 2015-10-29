@@ -19,9 +19,9 @@ angular.module('arcadiaBaseApp')
       }
     };
     $scope.delete = function(user) {
-      var user = Auth.getCurrentUser()._id;
+      // var user = Auth.getCurrentUser()._id;
       if(user) {
-        User.remove({id: user})
+        User.remove({id: user._id})
         .then( function() {
           $location.path = '/';
         });
