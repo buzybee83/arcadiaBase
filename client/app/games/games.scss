@@ -1,0 +1,63 @@
+
+#messages {
+  width: 500px;
+  height: 400px;
+  margin: auto auto;
+  background-color: white;
+  color: #454545;
+  text-align: left;
+  border-radius: 5px;
+  padding: 10px;
+  overflow: scroll;
+  scroll: true;
+}
+
+#messages li {
+  list-style-type: none;
+  padding: 3px 6px;
+}
+.left {
+  text-align: left;
+}
+a {
+  color: white;
+}
+.animate-inventory a:hover {
+  color: black;
+  cursor: crosshair;
+  text-decoration: none;
+}
+#messageInput {
+  width: 300px;
+}
+.chat-toolbar {
+  margin-top: 10px;
+}
+.message {
+  border-radius: 5px;
+  color: black;
+}
+#messages > li {
+  border: 1px solid #cccccc;
+  margin-top: 1px;
+  margin-bottom: 0.8px;
+}
+// ANIMATIONS
+$animation-duration: 1s;
+.animate-inventory {
+  &.ng-enter {
+    animation: zoomInUp 0.8s;
+  }
+  &.ng-leave {
+    animation: zoomOutDown 0.8s;
+  }
+}
+.message > li {
+  &.ng-enter {
+    animation: zoomInUp;
+  }
+  &.ng-leave {
+    animation: zoomOutDown 0.8s;
+  }
+}
+
