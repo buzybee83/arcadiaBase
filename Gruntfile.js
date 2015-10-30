@@ -358,6 +358,9 @@ module.exports = function (grunt) {
             'bower_components/**/*',
             'assets/images/{,*/}*.{webp}',
             'assets/fonts/**/*',
+            'assets/sounds/**/*.ogg',
+            'assets/sounds/**/*.mp3',
+            'assets/videos/**/*.mp4',
             'index.html'
           ]
         }, {
