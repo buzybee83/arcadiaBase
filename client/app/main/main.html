@@ -1,20 +1,120 @@
-<div class="hero-unit" id="banner">
+<section class="">
   <div class="container">
     <section>
-      <h2>Welcome to ArcadiaBASE</h2>
-    </section>
-    <section>
-      <div class="row center">
-        <p>The idea behind this project was to create a web app in the MEAN Stack, but instead of using socket.io, implement the use of Firebase. Firebase lets you store & sync data to all connected clients in realtime. Although it is also a noSQL databse as well, I'm still using MongoDB to store my data and users. Only using Firebase for the "real-time" game play</p>
-      </div>
-      <div class="row center">
-        <hr>
-        <h3>Play Tetris</h3> Play by yourself or have tons of fun with an oponent!
-        <h4>2 Player Game Rules</h4> For every 4 rows cleared, a row will get pushed to your oponent. Use the LEFT, RIGHT, and DOWN arrow keys to move left, right, or down respectively. Use the UP key to change rotation of the falling piece. If you feel confident about your location, press the SPACE BAR for fast drop!
+      <video autoplay poster="" id="video-home" loop>
+        <source src="../assets/videos/Kind of Tetris Free Vj Loop-HD.mp4" mute type="video/mp4">
+      </video>
+      <div id="letters" onClick="explodeLetters()" class="home">
+        <h1 class="splitText">WELCOME to ARCADIA BASE</h1>
       </div>
     </section>
+    <!--  <section>
+    <div class="row center">
+      <p>The idea behind this project was to create a web app in the MEAN Stack, but instead of using socket.io, implement the use of Firebase. Firebase lets you store & sync data to all connected clients in realtime. Although it is also a noSQL databse as well, I'm still using MongoDB to store my data and users. Only using Firebase for the "real-time" game play</p>
+    </div>
+    <div class="row center">
+      <hr>
+      <h3>Play Tetris</h3> Play by yourself or have tons of fun with an oponent!
+      <h4>2 Player Game Rules</h4> For every 4 rows cleared, a row will get pushed to your oponent. Use the LEFT, RIGHT, and DOWN arrow keys to move left, right, or down respectively. Use the UP key to change rotation of the falling piece. If you feel confident about your location, press the SPACE BAR for fast drop!
+    </div>
+  </section> -->
   </div>
-  <footer class="navbar-bottom footer container">
-    <p><span class="glyphicon glyphicon-heart"> Games</span></p>
-  </footer>
-</div>
+</section>
+<!-- </div> -->
+<script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/gsap/1.8.2/TweenMax.min.js"></script>
+<script>
+// Mute background video
+$('#video-home').prop('volume', 0);
+$('#video-hom').prop('muted', true);
+
+var initialText = $(".splitText").text();
+var type = splitLetters(initialText);
+
+$("#letters").on('click', function() {
+
+
+    $(".splitText").empty();
+    $(".splitText").html(type);
+    explodeLetters();
+  });
+
+function explodeLetters() {
+
+  threeDTimeline = new TimelineLite({
+    align: 'start'
+  });
+
+  var children = $('.splitText').children().length;
+  for (var i = 0; i < children; i++) {
+
+    for (var i = 0; i < children; i++) {
+
+      var element = $(".splitText").children().eq(i);
+      var pos = element.offset();
+      element.css({
+        'left': pos.left,
+        'top': pos.top
+      });
+
+      threeDTimeline.insert(TweenMax.to(element, 1.5, {
+        'position': 'absolute',
+        left: Math.random() * 1850 - 100,
+        top: Math.random() * 650 - 100,
+        ease: Quad.easeIn,
+        fontSize: '+=35',
+        autoAlpha: 0
+      }));
+    }
+    threeDTimeline.play();
+  }
+}
+
+function splitLetters(userInput) {
+  var a;
+  var arr = userInput.split("");
+
+  for (var i = 0; i < arr.length; i++) {
+
+    if (arr[i] == " ") {
+      arr[i] = '<div class="letter-measure blank">' + arr[i] + '</div>';
+    } else {
+
+      if (!arr[i].match(/\s\n\t\r/g) && arr[i] != "") arr[i] = '<div class="letter-measure">' + arr[i] + '</div>';
+    }
+  }
+  return arr.join(" ");
+};
+
+// function fx(o) {
+//   var $o = $(o);
+
+//   $o.html($o.text().replace(/([\S])/g, "<span>$1</span>"));
+//   $o.css("position", "relative");
+//   $("span", $o).each(function(i) {
+//     var newTop = Math.floor(Math.random()*500)*((i%2)?1:-1);
+//     var newLeft = Math.floor(Math.random()*500)*((i%2)?1:-1);
+
+//     $(this).css({position: "relative",
+//       opacity: 1,
+//       fontSize: 12,
+//       top: 0,
+//       left: 0
+//     }).animate({
+//       opacity: 0,
+//       fontSize: 110,
+//       top: newTop,
+//       left:newLeft
+//     },1000);
+//   });
+// }
+
+// var elem = document.querySelector('.malarkey');
+// var opts = {
+//   typeSpeed: 60,
+//   deleteSpeed: 60,
+//   pauseDelay: 1800,
+//   loop: true,
+//   postfix: ''
+// };
+// malarkey(elem, opts).type('WELCOME').pause().delete()
+</script>

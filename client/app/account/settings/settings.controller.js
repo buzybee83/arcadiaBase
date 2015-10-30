@@ -1,8 +1,12 @@
 'use strict';
 
 angular.module('arcadiaBaseApp')
-  .controller('SettingsCtrl', function ($scope, User, Auth, $http, $window, $location) {
+  .controller('SettingsCtrl', function ($scope, User, Auth, $http, $window, $state, $cookieStore) {
+    $scope.pageClass = 'page-account';
+
     $scope.errors = {};
+
+    $scope.currentUser = Auth.getCurrentUser();
 
     $scope.changePassword = function(form) {
       $scope.submitted = true;
@@ -18,12 +22,12 @@ angular.module('arcadiaBaseApp')
         });
       }
     };
-    $scope.delete = function(user) {
-      $scope.user = User;
 
-        User.remove({id: user._id})
-        .then( function() {
-          $location.path = '/';
-        });
-		};
+    $scope.delete = function(user) {
+       if(user) {
+        User.remove({id: user._id});
+        $state.go('main');
+        $scope.broadcast(Auth.isValidated());
+      }
+    };
   });

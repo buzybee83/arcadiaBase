@@ -1,4 +1,28 @@
-
+body {
+  background-color: black;
+  min-height: 100%;
+  font-family: 'Share Tech Mono';
+  font-size: 16px;
+}
+.hero-unit {
+  margin-top: -20px;
+  background-image: url('../assets/images/background_texture_tetris.jpg');
+  background-size: cover;
+  background-color: #555555;
+}
+.list-group-game h3 {
+  font-family: 'VT323';
+  font-size: 30px;
+}
+.chat-main {
+  padding: 30px
+}
+.chat {
+  border-radius: 5px;
+  // background-color: #4393B9;
+  background-color: rgba(67,147,185, 0.8);
+  padding:30px;
+}
 #messages {
   width: 500px;
   height: 400px;
@@ -22,10 +46,11 @@ a {
   color: white;
 }
 .animate-inventory a:hover {
-  color: black;
-  cursor: crosshair;
+  color: #4393B9;
+  cursor: pointer;
   text-decoration: none;
 }
+
 #messageInput {
   width: 300px;
 }
@@ -40,6 +65,12 @@ a {
   border: 1px solid #cccccc;
   margin-top: 1px;
   margin-bottom: 0.8px;
+}
+.malarkey-game {
+  font-family: 'VT323';
+  font-size: 60px;
+  font-weight: 600;
+  min-height: 90px;
 }
 // ANIMATIONS
 $animation-duration: 1s;
