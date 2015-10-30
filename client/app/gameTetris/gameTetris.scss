@@ -3,9 +3,40 @@
   display: inline-block;
   border: 4px solid #424547;
   margin-right: 5px;
+  background-color: #EFFFFF;
 }
 .start-btn {
   margin-left: 43%;
   margin-top: 5%;
 }
-
+#scoreBoard {
+  border: 1px solid #cccccc;
+  border-radius: 5px;
+  height: 300px;
+  margin-bottom: 10px;
+}
+#scoreBoard {
+  color: red;
+  font-weight: bold;
+  vertical-align: middle;
+  padding: 15px;
+  background-color: #99c0c9;
+}
+#upcoming {
+  border-radius:5px;
+  border: 1px solid #cccccc;
+  width: 100%;
+  height: 200px;
+  background-color: white;
+}
+.hero-unit {
+  position: relative;
+  padding: 30px 15px;
+  color: #F5F5F5;
+  text-align: center;
+  text-shadow: 0 1px 0 rgba(0, 0, 0, 0.1);
+  background: #4393B9;
+}
+.gameButtons {
+  margin-left: 10%;
+}
