@@ -17,12 +17,6 @@ Game.find().remove(function() {
       description: 'Strategically rotate, move, and drop a procession of Tetriminos that fall into the rectangular Matrix. Clear as many lines as possible by completing horizontal rows of blocks without empty space, but if the Tetriminos surpass the Skyline the game is over!',
       players: '1 - 2 players'
     },
-    {
-      category: 'Strategy',
-      name: 'Connect4',
-      description: 'Connect Four is a grid of seven columns and six rows. While the game is simple to follow and play, it can be rather challenging to win.',
-      players: '2 players'
-    },
     function() {
       Game.find(function (err, games) {
         if (err) { console.log(err); }

@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('arcadiaBaseApp')
-  .controller('SettingsCtrl', function ($scope, User, Auth, $window, $location) {
+  .controller('SettingsCtrl', function ($scope, User, Auth, $http, $window, $location) {
     $scope.errors = {};
 
     $scope.changePassword = function(form) {
@@ -19,12 +19,11 @@ angular.module('arcadiaBaseApp')
       }
     };
     $scope.delete = function(user) {
-      // var user = Auth.getCurrentUser()._id;
-      if(user) {
+      $scope.user = User;
+
         User.remove({id: user._id})
         .then( function() {
           $location.path = '/';
         });
-      }
 		};
   });

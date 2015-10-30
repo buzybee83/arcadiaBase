@@ -55,6 +55,7 @@
 
 <!-- CHAT JAVACRIPT -->
 <script>
+
 // CREATE A REFERENCE TO FIREBASE
 var messagesRef = new Firebase('https://arcadiabase.firebaseio.com/');
 
@@ -97,17 +98,9 @@ messagesRef.limitToLast(15).on('child_added', function(snapshot) {
   changeMssgBgColor(mssg);
   //SCROLL TO BOTTOM OF MESSAGE LIST
   messageList[0].scrollTop = messageList[0].scrollHeight;
-
-  function deleteMssg(mssg) {
-    var deleteRef = new Firebase("https://arcadiabase.firebaseio.com/"+mssg.id);
-    console.log('Firebase ref: ' + deleteRef);
-    //this command removes the item from the firebase, and then deletes it from our local viewmodel to keep the views in sync
-    deleteRef.remove(function(){  viewmodel.messages.remove(mssg); });
-  }
 });
 
-
-
+// Randomize text color in chat text area
 function changeMssgBgColor(el) {
   var randomColor = Math.floor(Math.random()*16777215).toString(16);
   $('.message').css('color', '#' + randomColor);
