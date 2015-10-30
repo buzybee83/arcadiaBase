@@ -4,8 +4,6 @@
  */
 
 'use strict';
-
-var Thing = require('../api/thing/thing.model');
 var Game = require('../api/game/game.model');
 
 
