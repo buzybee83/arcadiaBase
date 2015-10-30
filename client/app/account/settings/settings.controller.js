@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('arcadiaBaseApp')
-  .controller('SettingsCtrl', function ($scope, User, Auth, $http, $window, $state, $cookieStore) {
+  .controller('SettingsCtrl', function ($scope, User, Auth, $http, $window, $state) {
     $scope.pageClass = 'page-account';
 
     $scope.errors = {};
