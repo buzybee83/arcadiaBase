@@ -1,7 +1,8 @@
 'use strict';
 
 angular.module('arcadiaBaseApp')
-  .controller('GamesCtrl', function ($state, gameService) {
+  .controller('GamesCtrl', function ($scope, $state, gameService) {
+    $scope.pageClass = 'page-games';
 
     var that = this;
 

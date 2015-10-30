@@ -2,6 +2,8 @@
 
 angular.module('arcadiaBaseApp')
   .controller('SignupCtrl', function ($scope, Auth, $location, $window) {
+    $scope.pageClass = 'page-signup';
+
     $scope.user = {};
     $scope.errors = {};
 
@@ -16,7 +18,7 @@ angular.module('arcadiaBaseApp')
         })
         .then( function() {
           // Account created, redirect to home
-          $location.path('/');
+          $location.path('/games');
         })
         .catch( function(err) {
           err = err.data;

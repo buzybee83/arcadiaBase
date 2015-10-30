@@ -30,7 +30,7 @@
     <!-- Add your site or application content here -->
     <div ng-include="'components/navbar/navbar.html'"></div>
 
-    <div ui-view=""></div>
+    <div class="page {{ pageClass }}" ui-view=""></div>
 
     <!-- Google Analytics: change UA-XXXXX-X to be your site's ID -->
     <script>
@@ -63,6 +63,7 @@
       <script src="bower_components/angularfire/dist/angularfire.js"></script>
       <!-- endbower -->
       <script src="socket.io-client/socket.io.js"></script>
+      <script src="assets/javascript/malarkey.min.js"></script>
     <!-- endbuild -->
 
         <!-- build:js({.tmp,client}) app/app.js -->

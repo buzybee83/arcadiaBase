@@ -2,6 +2,8 @@
 
 angular.module('arcadiaBaseApp')
   .controller('LoginCtrl', function ($scope, Auth, $location, $window) {
+    $scope.pageClass = 'page-login';
+
     $scope.user = {};
     $scope.errors = {};
 
@@ -15,7 +17,7 @@ angular.module('arcadiaBaseApp')
         })
         .then( function() {
           // Logged in, redirect to home
-          $location.path('/');
+          $location.path('/games');
         })
         .catch( function(err) {
           $scope.errors.other = err.message;
